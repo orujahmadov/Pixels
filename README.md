@@ -1,2 +1,2 @@
 # Pixels
-Desktop App to update set daily wallpapers.
+Desktop App to set daily wallpapers.
