@@ -6,6 +6,15 @@ import urllib
 import string
 import random
 from random import randint
+import os
+import schedule
+import time
+
+SCRIPT = """/usr/bin/osascript<<END
+tell application "Finder"
+set desktop picture to POSIX file "%s"
+end tell
+END"""
 
 def set_desktop_background(filename):
     subprocess.Popen(SCRIPT%filename, shell=True)
@@ -20,17 +29,17 @@ def authorization_url_with_verifier():
     handler.set_request_token(request_token,request_token_secret)
     return handler
 
-SCRIPT = """/usr/bin/osascript<<END
-tell application "Finder"
-set desktop picture to POSIX file "%s"
-end tell
-END"""
+def update_wallpaper():
+    handler = authorization_url_with_verifier()
+    api = FiveHundredPXAPI(handler)
+    response = json.loads(json.dumps(api.photos_search(require_auth=True, tag="city", rpp=100, image_size=2048)))
+    image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+    image_name = os.path.expanduser("~/Desktop/500PX/") + image_name + ".jpg"
+    random_index = randint(0,len(response["photos"]))
+    urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
+    set_desktop_background(image_name)
 
-handler = authorization_url_with_verifier()
-api = FiveHundredPXAPI(handler)
-response = json.loads(json.dumps(api.photos_search(require_auth=True, tag="city sunrise", rpp=100, image_size=2048)))
-image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
-image_name = "/Users/orujahmadov/Desktop/500PX/" + image_name + ".jpg"
-random_index = randint(0,len(response["photos"]))
-urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
-set_desktop_background(image_name)
+schedule.every(1).minutes.do(update_wallpaper)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
