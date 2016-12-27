@@ -1,9 +1,0 @@
-subprocess
-fivehundredpx
-simplejson==3.10.0
-urllib
-string
-random
-os
-schedule==0.4.2
-time

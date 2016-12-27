@@ -10,12 +10,22 @@ import os
 import schedule
 import time
 import Tkinter
+from Tkinter import *
+from tkMessageBox import *
+
+############## CONSTANT VALUES ################################################
+
+CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
+CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
 
 SCRIPT = """/usr/bin/osascript<<END
 tell application "Finder"
 set desktop picture to POSIX file "%s"
 end tell
 END"""
+
+DIRECTORY = os.path.expanduser("~/Desktop/500PX/")
+###############################################################################
 
 class Pixels(Tkinter.Tk):
 
@@ -41,12 +51,17 @@ class Pixels(Tkinter.Tk):
     def OnButtonClick(self):
         self.update_wallpaper(self.entry.get())
 
+    def ensure_dir_valid(self,directory):
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
     def set_desktop_background(self,filename):
         subprocess.Popen(SCRIPT%filename, shell=True)
 
+    def error(self):
+        showerror("Response", "Sorry, no image found with specified tags")
+
     def authorization_url_with_verifier(self):
-        CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
-        CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
         handler = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         token = handler.get_request_token()
         request_token = token.key
@@ -58,11 +73,15 @@ class Pixels(Tkinter.Tk):
         handler = self.authorization_url_with_verifier()
         api = FiveHundredPXAPI(handler)
         response = json.loads(json.dumps(api.photos_search(require_auth=True, tag=tags, rpp=100, image_size=2048)))
-        image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
-        image_name = os.path.expanduser("~/Desktop/500PX/") + image_name + ".jpg"
-        random_index = randint(0,len(response["photos"]))
-        urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
-        self.set_desktop_background(image_name)
+        if len(response["photos"]) == 0:
+            self.error()
+        else:
+            image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
+            self.ensure_dir_valid(DIRECTORY)
+            image_name = DIRECTORY + image_name + ".jpg"
+            random_index = randint(0,len(response["photos"])-1)
+            urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
+            self.set_desktop_background(image_name)
 
 
 # schedule.every(1).minutes.do(update_wallpaper)
