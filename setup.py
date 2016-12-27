@@ -9,7 +9,8 @@ from setuptools import setup
 
 APP = ['wallpaper.py']
 DATA_FILES = []
-OPTIONS = {'argv_emulation': True}
+OPTIONS = {'argv_emulation': True,
+ 'iconfile': '/Users/orujahmadov/Desktop/Pixels/icon.icns'}
 
 setup(
     app=APP,
