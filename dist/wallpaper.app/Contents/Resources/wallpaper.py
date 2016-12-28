@@ -7,7 +7,6 @@ import string
 import random
 from random import randint
 import os
-import schedule
 import time
 import Tkinter
 from Tkinter import *
@@ -17,6 +16,7 @@ from tkMessageBox import *
 
 CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
 CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
+CATEGORIES_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
 
 SCRIPT = """/usr/bin/osascript<<END
 tell application "Finder"
@@ -37,19 +37,29 @@ class Pixels(Tkinter.Tk):
     def initialize(self):
         self.grid()
 
-        self.entryVariable = Tkinter.StringVar()
-        self.entry = Tkinter.Entry(self,textvariable=self.entryVariable)
-        self.entry = Tkinter.Entry(self)
-        self.entryVariable.set(u"Enter tags here")
-        self.entry.grid(column=0,row=0,sticky='EW')
+        # label = Tkinter.Label(self,text="PiXeLS")
+        # label.grid(column=0,row=0)
 
-        button = Tkinter.Button(self,text=u"New Wallpaper", command=self.OnButtonClick)
-        button.grid(column=0,row=1)
+        label = Tkinter.Label(self,text="Tags")
+        label.grid(column=0,row=1)
+        self.entry = Tkinter.Entry(self)
+        self.entry.grid(column=1,row=1,sticky='EW')
+
+        self.category = Tkinter.StringVar()
+        self.category.set('Uncategorized') #Default value
+
+        label = Tkinter.Label(self,text="Category")
+        label.grid(column=0,row=2)
+        self.option = OptionMenu(self, self.category, *CATEGORIES_NAMES)
+        self.option.grid(column=1,row=2)
+
+        self.button = Tkinter.Button(self,text=u"New Wallpaper", command=self.OnButtonClick)
+        self.button.grid(column=1,row=3)
 
         self.grid_columnconfigure(0,weight=1)
 
     def OnButtonClick(self):
-        self.update_wallpaper(self.entry.get())
+        self.update_wallpaper(self.entry.get(), self.category.get())
 
     def ensure_dir_valid(self,directory):
         if not os.path.exists(directory):
@@ -69,10 +79,10 @@ class Pixels(Tkinter.Tk):
         handler.set_request_token(request_token,request_token_secret)
         return handler
 
-    def update_wallpaper(self, tags):
+    def update_wallpaper(self, tags, category):
         handler = self.authorization_url_with_verifier()
         api = FiveHundredPXAPI(handler)
-        response = json.loads(json.dumps(api.photos_search(require_auth=True, tag=tags, rpp=100, image_size=2048)))
+        response = json.loads(json.dumps(api.photos_search(require_auth=True, tag=tags, only=category, rpp=100, image_size=2048)))
         if len(response["photos"]) == 0:
             self.error()
         else:
@@ -83,11 +93,6 @@ class Pixels(Tkinter.Tk):
             urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
             self.set_desktop_background(image_name)
 
-
-# schedule.every(1).minutes.do(update_wallpaper)
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
 
 if __name__ == "__main__":
     pixels = Pixels(None)
