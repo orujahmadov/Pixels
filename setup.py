@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['wallpaper.py']
+APP = ['pixels.py']
 DATA_FILES = []
 OPTIONS = {'argv_emulation': True}
 

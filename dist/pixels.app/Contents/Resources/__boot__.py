@@ -368,6 +368,6 @@ def _setup_ctypes():
 _setup_ctypes()
 
 
-DEFAULT_SCRIPT='wallpaper.py'
+DEFAULT_SCRIPT='pixels.py'
 SCRIPT_MAP={}
 _run()

@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Creating a setup.py file..."
-py2applet --make-setup wallpaper.py
+py2applet --make-setup pixels.py
 echo "Cleaning up build directories..."
 rm -rf build dist
 echo "Building for development..."
