@@ -68,6 +68,12 @@ class Pixels(Tkinter.Tk):
     def set_desktop_background(self,filename):
         subprocess.Popen(SCRIPT%filename, shell=True)
 
+    def set_desktop_background_win(self, filename):
+        command = "gconftool-2 --set /desktop/gnome/background/picture_filename --type string " + filename
+        status, output = commands.getstatusoutput(command)
+        print(status)
+        print (output)
+
     def error(self):
         showerror("Response", "Sorry, no image found with specified tags")
 
