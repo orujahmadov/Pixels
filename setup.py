@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['pixels.py']
+APP = ['/Users/orujahmadov/Desktop/Pixels/pixels.py']
 DATA_FILES = []
 OPTIONS = {'argv_emulation': True}
 
