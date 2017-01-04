@@ -7,9 +7,10 @@ Usage:
 
 from setuptools import setup
 
-APP = ['/Users/orujahmadov/Desktop/Pixels/pixels.py']
+APP = ['Pixels.py']
 DATA_FILES = []
-OPTIONS = {'argv_emulation': True}
+OPTIONS = {'argv_emulation': True,
+            'iconfile':'Pixels.icns'}
 
 setup(
     app=APP,

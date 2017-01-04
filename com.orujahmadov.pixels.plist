@@ -4,16 +4,12 @@
 <dict>
 	<key>Label</key>
 	<string>com.orujahmadov.pixels</string>
-  <key>ProgramArguments</key>
-  <array>
-      <string>/usr/bin/python</string>
-      <string>/Users/orujahmadov/Desktop/test.py</string>
-  </array>
-	<key>StandardErrorPath</key>
-	<string>/Users/orujahmadov/Desktop/com.orujahmadov.pixels.err</string>
-	<key>StandardOutPath</key>
-	<string>/Users/orujahmadov/Desktop/pixels.txt</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/python</string>
+		<string>~/Desktop/pixels.py</string>
+	</array>
 	<key>StartInterval</key>
-	<integer>60</integer>
+	<integer>86400</integer>
 </dict>
 </plist>

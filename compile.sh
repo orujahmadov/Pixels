@@ -1,7 +1,11 @@
 #!/bin/bash
-echo "Creating a setup.py file..."
-py2applet --make-setup /Users/orujahmadov/Desktop/Pixels/pixels.py
+echo "Deleting previous setup.py file..."
+rm -rf ~/Desktop/Pixels/setup.py
+echo "Creating a new setup.py file..."
+py2applet --make-setup ~/Desktop/Pixels/Pixels.py
+echo "Adding iconfile"
+py2applet --iconfile ~/Desktop/Pixels/Pixels.icns
 echo "Cleaning up build directories..."
-rm -rf /Users/orujahmadov/Desktop/Pixels/build /Users/orujahmadov/Desktop/Pixels/dist
+rm -rf ~/Desktop/Pixels/build /Users/orujahmadov/Desktop/Pixels/dist
 echo "Building for development..."
-python /Users/orujahmadov/Desktop/Pixels/setup.py py2app
+python ~/Desktop/Pixels/setup.py py2app

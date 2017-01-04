@@ -368,6 +368,6 @@ def _setup_ctypes():
 _setup_ctypes()
 
 
-DEFAULT_SCRIPT='pixels.py'
+DEFAULT_SCRIPT='Pixels.py'
 SCRIPT_MAP={}
 _run()
