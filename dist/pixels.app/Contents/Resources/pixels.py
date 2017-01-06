@@ -16,7 +16,8 @@ from tkMessageBox import *
 
 CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
 CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
-CATEGORIES_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
+CATEGORY_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
+FEATURE_NAMES = ["Popular","Editors","Upcoming","Fresh Today","Fresh Yesterday","Fresh Week"]
 
 SCRIPT = """/usr/bin/osascript<<END
 tell application "Finder"
@@ -37,21 +38,21 @@ class Pixels(Tkinter.Tk):
     def initialize(self):
         self.grid()
 
-        # label = Tkinter.Label(self,text="PiXeLS")
-        # label.grid(column=0,row=0)
+        self.feature = Tkinter.StringVar()
+        self.feature.set('Popular') #Default value
 
-        label = Tkinter.Label(self,text="Tags")
-        label.grid(column=0,row=1)
-        self.entry = Tkinter.Entry(self)
-        self.entry.grid(column=1,row=1,sticky='EW')
+        label_feature = Tkinter.Label(self,text="Feature")
+        label_feature.grid(column=0,row=1)
+        self.option_feature = OptionMenu(self, self.feature, *FEATURE_NAMES)
+        self.option_feature.grid(column=1,row=1)
 
         self.category = Tkinter.StringVar()
         self.category.set('Uncategorized') #Default value
 
-        label = Tkinter.Label(self,text="Category")
-        label.grid(column=0,row=2)
-        self.option = OptionMenu(self, self.category, *CATEGORIES_NAMES)
-        self.option.grid(column=1,row=2)
+        label_category = Tkinter.Label(self,text="Category")
+        label_category.grid(column=0,row=2)
+        self.option_category = OptionMenu(self, self.category, *CATEGORY_NAMES)
+        self.option_category.grid(column=1,row=2)
 
         self.button = Tkinter.Button(self,text=u"New Wallpaper", command=self.OnButtonClick)
         self.button.grid(column=1,row=3)
@@ -59,7 +60,9 @@ class Pixels(Tkinter.Tk):
         self.grid_columnconfigure(0,weight=1)
 
     def OnButtonClick(self):
-        self.update_wallpaper(self.entry.get(), self.category.get())
+        selected_feature = self.feature.get().replace(" ","_").lower()
+        selected_category = self.category.get()
+        self.update_wallpaper(selected_feature, selected_category)
 
     def ensure_dir_valid(self,directory):
         if not os.path.exists(directory):
@@ -69,7 +72,7 @@ class Pixels(Tkinter.Tk):
         subprocess.Popen(SCRIPT%filename, shell=True)
 
     def error(self):
-        showerror("Response", "Sorry, no image found with specified tags")
+        showerror("Response", "Sorry, no image found with specified options")
 
     def authorization_url_with_verifier(self):
         handler = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -79,10 +82,10 @@ class Pixels(Tkinter.Tk):
         handler.set_request_token(request_token,request_token_secret)
         return handler
 
-    def update_wallpaper(self, tags, category):
+    def update_wallpaper(self, feature, category):
         handler = self.authorization_url_with_verifier()
         api = FiveHundredPXAPI(handler)
-        response = json.loads(json.dumps(api.photos_search(require_auth=True, tag=tags, only=category, rpp=100, image_size=2048)))
+        response = json.loads(json.dumps(api.photos(require_auth=True, feature=feature, only=category, rpp=100, image_size=2048)))
         if len(response["photos"]) == 0:
             self.error()
         else:
