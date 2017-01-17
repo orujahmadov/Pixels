@@ -18,10 +18,14 @@ CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
 CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
 CATEGORY_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
 FEATURE_NAMES = ["Popular","Editors","Upcoming","Fresh Today","Fresh Yesterday","Fresh Week"]
+INTERVAL_NAMES = ["Every 5 seconds","Every minute","Every 5 minutes ","Every 15 minutes","Every 30 minutes","Every hour","Every day"]
 
 SCRIPT = """/usr/bin/osascript<<END
-tell application "Finder"
-set desktop picture to POSIX file "%s"
+tell application "System Events"
+	tell current desktop
+		set pictures folder to "/Users/orujahmadov/Desktop/500PX"
+		set change interval to {}
+	end tell
 end tell
 END"""
 
@@ -54,8 +58,16 @@ class Pixels(Tkinter.Tk):
         self.option_category = OptionMenu(self, self.category, *CATEGORY_NAMES)
         self.option_category.grid(column=1,row=2)
 
+        self.interval = Tkinter.StringVar()
+        self.interval.set('Every hour') #Default value
+
+        label_interval = Tkinter.Label(self,text="Interval")
+        label_interval.grid(column=0,row=3)
+        self.option_interval = OptionMenu(self, self.interval, *INTERVAL_NAMES)
+        self.option_interval.grid(column=1,row=3)
+
         self.button = Tkinter.Button(self,text=u"New Wallpaper", command=self.OnButtonClick)
-        self.button.grid(column=1,row=3)
+        self.button.grid(column=1,row=4)
 
         self.grid_columnconfigure(0,weight=1)
 
@@ -69,7 +81,8 @@ class Pixels(Tkinter.Tk):
             os.makedirs(directory)
 
     def set_desktop_background(self,filename):
-        subprocess.Popen(SCRIPT%filename, shell=True)
+        # subprocess.Popen(SCRIPT.format(self.parse_interval(self.interval)), shell=True)
+		subprocess.Popen(SCRIPT.format(5.0), shell=True)
 
     def error(self):
         showerror("Response", "Sorry, no image found with specified options")
@@ -89,11 +102,12 @@ class Pixels(Tkinter.Tk):
         if len(response["photos"]) == 0:
             self.error()
         else:
-            image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
             self.ensure_dir_valid(DIRECTORY)
-            image_name = DIRECTORY + image_name + ".jpg"
-            random_index = randint(0,len(response["photos"])-1)
-            urllib.urlretrieve(response["photos"][random_index]["images"][0]["url"], image_name)
+            image_name = ""
+            for index in range(len(response["photos"])-1):
+                image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
+                image_name = DIRECTORY + image_name + ".jpg"
+                urllib.urlretrieve(response["photos"][index]["images"][0]["url"], image_name)
             self.set_desktop_background(image_name)
 
 
