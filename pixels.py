@@ -28,6 +28,7 @@ tell application "System Events"
 	tell current desktop
 		set pictures folder to "/Users/orujahmadov/Desktop/500PX"
 		set change interval to {}
+		set random order to true
 	end tell
 end tell
 END"""
