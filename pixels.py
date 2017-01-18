@@ -36,6 +36,18 @@ END"""
 DIRECTORY = os.path.expanduser("~/Desktop/500PX/")
 ###############################################################################
 
+###################### GLOBAL METHODS #########################################
+def clean_directory():
+	file_list = [ image_file for image_file in os.listdir(DIRECTORY)]
+	for each_file in file_list:
+	    os.remove(DIRECTORY+each_file)
+
+def ensure_dir_valid():
+    if not os.path.exists(DIRECTORY):
+        os.makedirs(DIRECTORY)
+
+###############################################################################
+
 class Pixels(Tkinter.Tk):
 
     def __init__(self,parent):
@@ -50,39 +62,36 @@ class Pixels(Tkinter.Tk):
         self.feature.set('Popular') #Default value
 
         label_feature = Tkinter.Label(self,text="Feature")
-        label_feature.grid(column=0,row=1)
+        label_feature.grid(column=0,row=1,sticky=E)
         self.option_feature = OptionMenu(self, self.feature, *FEATURE_NAMES)
-        self.option_feature.grid(column=1,row=1)
+        self.option_feature.grid(column=1,row=1,sticky=W)
 
         self.category = Tkinter.StringVar()
         self.category.set('Uncategorized') #Default value
 
         label_category = Tkinter.Label(self,text="Category")
-        label_category.grid(column=0,row=2)
+        label_category.grid(column=0,row=2,sticky=E)
         self.option_category = OptionMenu(self, self.category, *CATEGORY_NAMES)
-        self.option_category.grid(column=1,row=2)
+        self.option_category.grid(column=1,row=2,sticky=W)
 
         self.interval = Tkinter.StringVar()
         self.interval.set('Every hour') #Default value
 
         label_interval = Tkinter.Label(self,text="Interval")
-        label_interval.grid(column=0,row=3)
+        label_interval.grid(column=0,row=3,sticky=E)
         self.option_interval = OptionMenu(self, self.interval, *INTERVAL_NAMES)
-        self.option_interval.grid(column=1,row=3)
+        self.option_interval.grid(column=1,row=3,sticky=W)
 
         self.button = Tkinter.Button(self,text=u"New Wallpaper", command=self.OnButtonClick)
-        self.button.grid(column=1,row=4)
+        self.button.grid(column=1,row=4,sticky=W)
 
         self.grid_columnconfigure(0,weight=1)
+        self.grid_rowconfigure(0,weight=1)
 
     def OnButtonClick(self):
         selected_feature = self.feature.get().replace(" ","_").lower()
         selected_category = self.category.get()
         self.update_wallpaper(selected_feature, selected_category)
-
-    def ensure_dir_valid(self,directory):
-        if not os.path.exists(directory):
-            os.makedirs(directory)
 
     def set_desktop_background(self,filename):
 		subprocess.Popen(SCRIPT.format(INTERVAL_DICTIONARY[self.interval.get()]), shell=True)
@@ -105,7 +114,8 @@ class Pixels(Tkinter.Tk):
         if len(response["photos"]) == 0:
             self.error()
         else:
-            self.ensure_dir_valid(DIRECTORY)
+            ensure_dir_valid()
+            clean_directory()
             image_name = ""
             for index in range(len(response["photos"])-1):
                 image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
