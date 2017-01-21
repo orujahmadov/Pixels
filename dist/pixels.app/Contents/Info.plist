@@ -22,7 +22,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Pixels</string>
 	<key>CFBundleIconFile</key>
-	<string>Pixels.icns</string>
+	<string>PythonApplet.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.pythonmac.unspecified.Pixels</string>
 	<key>CFBundleInfoDictionaryVersion</key>
