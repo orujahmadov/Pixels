@@ -142,9 +142,7 @@ class Pixels(Tkinter.Tk):
         self.update_wallpaper(render_feature_key(selected_feature), selected_category, selected_interval)
 
     def set_desktop_background(self,filename, interval):
-		print("SCRIPT")
-		print(SCRIPT.format('"'+DIRECTORY+'"', interval))
-		subprocess.Popen(SCRIPT, shell=True)
+		subprocess.Popen(SCRIPT.format('"'+DIRECTORY+'"', interval), shell=True)
 
     def error(self):
         showerror("Response", "Sorry, no image found with specified options")
