@@ -15,7 +15,7 @@ import ttk
 import yaml
 
 ############## CONSTANT VALUES ################################################
-
+DIRECTORY = os.path.expanduser("~/Desktop/500PX/")
 CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
 CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
 CATEGORY_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
@@ -24,12 +24,12 @@ INTERVAL_NAMES = ["Every 5 seconds","Every minute","Every 5 minutes","Every 15 m
 
 ############### DICTIONARIES #################################################
 INTERVAL_DICTIONARY = {"Every 5 seconds":5.0, "Every minute":60.0, "Every 5 minutes":300.0, "Every 15 minutes":900.0, "Every 30 minutes":1800.0, "Every hour":3600.0, "Every day":86400.0}
-INTERVAL_DICTIONARY_REVERSE = {"5.0":"Every 5 seconds", "60":"Every minute", "300.0":"Every 5 minutes", "900.0":"Every 15 minutes", "1800.0":"Every 30 minutes", "3600.0":"Every hour", "86400.0":"Every day"}
+INTERVAL_DICTIONARY_REVERSE = {"5.0":"Every 5 seconds", "60.0":"Every minute", "300.0":"Every 5 minutes", "900.0":"Every 15 minutes", "1800.0":"Every 30 minutes", "3600.0":"Every hour", "86400.0":"Every day"}
 
 SCRIPT = """/usr/bin/osascript<<END
 tell application "System Events"
 	tell current desktop
-		set pictures folder to "/Users/orujahmadov/Desktop/500PX"
+		set pictures folder to {}
 		set change interval to {}
 		set random order to true
 	end tell
@@ -43,8 +43,6 @@ tell application "System Events"
 	end tell
 end tell
 END"""
-
-DIRECTORY = os.path.expanduser("~/Desktop/500PX/")
 ###############################################################################
 
 ###################### GLOBAL METHODS #########################################
@@ -67,6 +65,9 @@ def get_configs():
 def update_configs(data):
     with open('configs.yaml', 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=True)
+
+def render_feature_key(feature):
+    return feature.replace(" ","_").lower()
 
 ###############################################################################
 
@@ -130,7 +131,7 @@ class Pixels(Tkinter.Tk):
         self.progress.grid(column=1,row=5,sticky=EW, padx=5, pady=10)
 
     def OnSaveClick(self):
-        selected_feature = self.feature.get().replace(" ","_").lower()
+        selected_feature = self.feature.get()
         selected_category = self.category.get()
         selected_interval = INTERVAL_DICTIONARY[self.interval.get()]
 		# Update YAML config filename
@@ -138,10 +139,12 @@ class Pixels(Tkinter.Tk):
         self.configs["app"]["category"] = selected_category
         self.configs["app"]["interval"] = selected_interval
         update_configs(self.configs)
-        self.update_wallpaper(selected_feature, selected_category, selected_interval)
+        self.update_wallpaper(render_feature_key(selected_feature), selected_category, selected_interval)
 
     def set_desktop_background(self,filename, interval):
-		subprocess.Popen(SCRIPT.format(interval), shell=True)
+		print("SCRIPT")
+		print(SCRIPT.format('"'+DIRECTORY+'"', interval))
+		subprocess.Popen(SCRIPT, shell=True)
 
     def error(self):
         showerror("Response", "Sorry, no image found with specified options")
