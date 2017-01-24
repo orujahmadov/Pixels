@@ -7,8 +7,12 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/bin/python</string>
-		<string>~/Desktop/pixels.py</string>
+		<string>/Users/orujahmadov/Desktop/Pixels/Updater.py</string>
 	</array>
+	<key>StandardErrorPath</key>
+	<string>/Users/orujahmadov/Desktop/stderr</string>
+	<key>StandardOutPath</key>
+	<string>/Users/orujahmadov/Desktop/stdout</string>
 	<key>StartInterval</key>
 	<integer>86400</integer>
 </dict>
