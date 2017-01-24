@@ -168,8 +168,8 @@ class Pixels(Tkinter.Tk):
             image_name = DIRECTORY + image_name + ".jpg"
             urllib.urlretrieve(self.response["photos"][0]["images"][0]["url"], image_name)
             self.set_desktop_background(image_name, interval)
-            self.image_index = 0
-            self.progress["value"] = 0
+            self.image_index = 1
+            self.progress["value"] = 1
             self.progress["maximum"] = 100
             self.download_images()
 

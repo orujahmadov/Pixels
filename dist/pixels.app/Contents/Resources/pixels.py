@@ -142,9 +142,7 @@ class Pixels(Tkinter.Tk):
         self.update_wallpaper(render_feature_key(selected_feature), selected_category, selected_interval)
 
     def set_desktop_background(self,filename, interval):
-		print("SCRIPT")
-		print(SCRIPT.format('"'+DIRECTORY+'"', interval))
-		subprocess.Popen(SCRIPT, shell=True)
+		subprocess.Popen(SCRIPT.format('"'+DIRECTORY+'"', interval), shell=True)
 
     def error(self):
         showerror("Response", "Sorry, no image found with specified options")
@@ -170,8 +168,8 @@ class Pixels(Tkinter.Tk):
             image_name = DIRECTORY + image_name + ".jpg"
             urllib.urlretrieve(self.response["photos"][0]["images"][0]["url"], image_name)
             self.set_desktop_background(image_name, interval)
-            self.image_index = 0
-            self.progress["value"] = 0
+            self.image_index = 1
+            self.progress["value"] = 1
             self.progress["maximum"] = 100
             self.download_images()
 
