@@ -158,18 +158,15 @@ class Pixels(Tkinter.Tk):
     def update_wallpaper(self, feature, category, interval):
         handler = self.authorization_url_with_verifier()
         api = FiveHundredPXAPI(handler)
-        self.response = json.loads(json.dumps(api.photos(require_auth=True, feature=feature, only=category, rpp=100, image_size=2048)))
+        page_number = random.randint(1,10)
+        self.response = json.loads(json.dumps(api.photos(require_auth=True, page=15, feature=feature, only=category, rpp=100, image_size=2048)))
         if len(self.response["photos"]) == 0:
             self.error()
         else:
             ensure_dir_valid()
             clean_directory()
-            image_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
-            image_name = DIRECTORY + image_name + ".jpg"
-            urllib.urlretrieve(self.response["photos"][0]["images"][0]["url"], image_name)
-            self.set_desktop_background(image_name, interval)
-            self.image_index = 1
-            self.progress["value"] = 1
+            self.image_index = 0
+            self.progress["value"] = 0
             self.progress["maximum"] = 100
             self.download_images()
 
