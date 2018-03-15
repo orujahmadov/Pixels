@@ -17,7 +17,11 @@ import ttk
 
 CONSUMER_KEY = 'OSdV70a94YN4ccIg2nIgUHQQV5tiLqVY4KrkREgQ'
 CONSUMER_SECRET= 'LNFCMtkbpJwW5GHoj3ezhWNsIKWALfB22SQOxQZi'
-CATEGORY_NAMES = ["Uncategorized","Abstract","Animals","Black and White","Celebrities","City and Architecture","Commercial","Concert","Family","Fashion","Film","Fine Art","Food","Journalism","Landscapes","Macro","Nature","Nude","People","Performing Arts","Sport","Still Life","Street","Transportation New!","Travel","Underwater","Urban Exploration New!","Wedding New!"]
+CATEGORY_NAMES = ["Uncategorized","Abstract","Aerial","Animals","Black and White","Celebrities",\
+				  "City and Architecture","Commercial","Concert","Family","Fashion","Film",\
+				  "Fine Art","Food","Journalism","Landscapes","Macro","Nature","Night","Nude","People",\
+				  "Performing Arts","Sport","Still Life","Street","Transportation","Travel",\
+				  "Underwater","Urban Exploration","Wedding"]
 FEATURE_NAMES = ["Popular","Editors","Upcoming","Fresh Today","Fresh Yesterday","Fresh Week"]
 INTERVAL_NAMES = ["Every 5 seconds","Every minute","Every 5 minutes","Every 15 minutes","Every 30 minutes","Every hour","Every day"]
 
