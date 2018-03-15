@@ -28,17 +28,22 @@ INTERVAL_NAMES = ["Every 5 seconds","Every minute","Every 5 minutes","Every 15 m
 ############### DICTIONARIES #################################################
 INTERVAL_DICTIONARY = {"Every 5 seconds":5.0, "Every minute":60.0, "Every 5 minutes":300.0, "Every 15 minutes":900.0, "Every 30 minutes":1800, "Every hour":3600.0, "Every day":86400.0}
 
+ROOT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+
+DIRECTORY = ROOT_DIRECTORY + "/images/"
+
+print("DIRECTORY ")
+print(DIRECTORY)
 SCRIPT = """/usr/bin/osascript<<END
 tell application "System Events"
 	tell current desktop
-		set pictures folder to "/Users/orujahmadov/Desktop/500PX"
+		set pictures folder to {}
 		set change interval to {}
 		set random order to true
 	end tell
 end tell
 END"""
 
-DIRECTORY = os.path.expanduser("~/Desktop/500PX/")
 ###############################################################################
 
 ###################### GLOBAL METHODS #########################################
@@ -106,7 +111,7 @@ class Pixels(Tkinter.Tk):
         self.update_wallpaper(selected_feature, selected_category)
 
     def set_desktop_background(self,filename):
-		subprocess.Popen(SCRIPT.format(INTERVAL_DICTIONARY[self.interval.get()]), shell=True)
+		subprocess.Popen(SCRIPT.format('"'+DIRECTORY+'"', INTERVAL_DICTIONARY[self.interval.get()]), shell=True)
 
     def error(self):
         showerror("Response", "Sorry, no image found with specified options")
